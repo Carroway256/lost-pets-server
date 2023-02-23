@@ -1,13 +1,31 @@
-import * as express from 'express';
-const app = express();
-const port = 3000;
+import * as express from "express";
+import pokemonRouter from "./routes/pokemonRoutes";
+import { MongoClient } from "mongodb";
 
-app.get('/', (req:express.Request, res:express.Response) => {
-  res.send('Hello World!');
+import authRouter from "./routes/authRoutes";
+import { MONGO_URL } from "./env";
+
+const app = express();
+const port = 4000;
+
+export const dbClient = new MongoClient(
+  MONGO_URL);
+
+app.use(express.json());
+app.use("/pokemons", pokemonRouter);
+app.use("/auth", authRouter);
+app.get("/", async (req: express.Request, res: express.Response) => {
+  try {
+    await dbClient.connect();
+    res.sendStatus(202).send();
+  } catch (e) {
+    res.sendStatus(501).send(e);
+  } finally {
+    await dbClient.close();
+  }
 });
 
 app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+  return console.log(`Expreass is listening at http://localhost:${port}`);
 });
-
 
