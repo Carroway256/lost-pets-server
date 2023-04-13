@@ -5,7 +5,7 @@ import { MongoClient } from "mongodb";
 import authRouter from "./routes/authRoutes";
 import { MONGO_URL } from "./env";
 
-const app = express();
+export const app = express();
 const port = 4000;
 
 export const dbClient = new MongoClient(
@@ -20,9 +20,7 @@ app.get("/", async (req: express.Request, res: express.Response) => {
     res.sendStatus(202).send();
   } catch (e) {
     res.sendStatus(501).send(e);
-  } finally {
-    await dbClient.close();
-  }
+  } 
 });
 
 app.listen(port, () => {
