@@ -1,2 +1,3 @@
 node_modules
 sr/env.ts
+.env.ts
